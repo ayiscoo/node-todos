@@ -1,14 +1,8 @@
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-var url_ser = 'mongodb://ayiscoo:FFFdunga...@123@ds261114.mlab.com:61114/todos';
-var url_loc ='mongodb://localhost:27017/TodoApp';
-
-mongoose.connect(url_ser,(err) => {
-        if (err){
-          mongoose.connect(url_loc);
-        }
-});
-
-
+//local
+//mongoose.connect('mongodb://localhost:27017/TodoApp');
+//server 
+mongoose.connect('mongodb://todouser:user@123@ds113849.mlab.com:13849/todoapp');
 module.exports= {mongoose};
