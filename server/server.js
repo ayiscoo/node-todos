@@ -9,6 +9,8 @@ const {ObjectID} = require('mongodb');
 
 var app = express();
 
+const port = process.env.PORT || 3000;
+
 // create a middle ware
 
 app.use(bodyPaser.json()); 
@@ -100,7 +102,7 @@ Todo.findById(id).then((todo) => {
 // });
 
 
-app.listen(3000,()=>{
-   console.log('connected to port 3000');
+app.listen(port,()=>{
+   console.log(`connected to port ${port}`);
 
 });
