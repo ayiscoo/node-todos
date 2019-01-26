@@ -7,6 +7,8 @@ var {mongoose} = require('./db/mongooseDb');
 var {Todo} = require('./models/todo');
 var {Users} = require('./models/users');
 
+var {authenticate} = require('./middleware/authenticate');
+
 const {ObjectID} = require('mongodb');
 
 var app = express();
@@ -156,7 +158,9 @@ app.post('/users',(req,res)=>{
 	// use pick from lodash
 	var body = _.pick(req.body,['email','password']);
 	var users = new Users(body);
+	
 	users.save().then(() => {
+		
 		return users.generateAuthToken();
 		        //res.send({users})
 	}).then((token) => {
@@ -165,7 +169,30 @@ app.post('/users',(req,res)=>{
       res.status(400).send(e);
 	});
 
+});
+// private route
 
+// create a middleware for find auth
+
+
+app.get('/users/me',authenticate,(req,res) => {
+         res.send(req.user);
+	});
+
+// app.get('/users/me',(req,res) => {
+  
+//    var token = req.header('x-auth');
+
+//    Users.findByToken(token).then((user) => {
+//       if(!user){
+//          return Promise.reject();
+//       }
+//       //sconsole.log(user);
+//       res.send(user);
+//    }).catch((e) => {
+//    	res.status(404).send(e);
+//    });
+// }) ;
 	
  // var users = new Users({
  //    email : req.body.email,
@@ -177,7 +204,6 @@ app.post('/users',(req,res)=>{
  // },(e) => {
  // 	res.status(400).send(e);
  // });
-});
 
 
 app.listen(port,()=>{

@@ -30,7 +30,7 @@
 // }
 
 // for JWT
-
+/*
 const jwt = require('jsonwebtoken');
 
   var data ={
@@ -49,3 +49,20 @@ const jwt = require('jsonwebtoken');
  }else {
  	 console.log('not verified :');
  }
+ */
+
+
+const  bcrypt = require('bcryptjs');
+var password = '123absc';
+// var salt = bcrypt.genSalt((10), (err,salt) => {
+//   bcrypt.hash(password, salt, (err,hash) => {
+//         // Store hash in your password DB.
+//         console.log(hash);
+//     });
+// });
+var hashPassword = '$2a$10$r5VCxjIiMaB97prBRyYGtOWUXTeTJu945036Yc1UJtEPAqmaesCT6';
+bcrypt.compare("123absc", hashPassword).then((res) => {
+    // res === true
+    console.log(res)
+});
+//var hash = bcrypt.hashSync("B4c0/\/", salt);

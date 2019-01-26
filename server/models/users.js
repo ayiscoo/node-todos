@@ -5,6 +5,8 @@ const _= require('lodash');
 
 const jwt = require('jsonwebtoken');
 
+const bcrypt = require('bcryptjs');
+
 
 // using schema to store properties
 var UserSchema = new mongoose.Schema({
@@ -97,7 +99,54 @@ UserSchema.methods.generateAuthToken = function(){
     return  user.save().then(() => {
          return token;
      });
-}
+};
+
+// define a module method
+UserSchema.statics.findByToken = function (token) {
+
+	var user = this;
+    var decoded;
+
+    try {
+     decoded = jwt.verify(token,'abc123');
+    } catch (e) {
+       // return  new Promise((reject,reslove) => {
+       //        reject();
+       //  });
+       return Promise.reject();
+    }
+
+     return user.findOne({
+     	'_id' : decoded._id,
+     	'token.token': token,
+     	'token.access': 'auth'
+
+     })
+};
+
+// create middle ware to hash password 
+
+UserSchema.pre('save' , function (next){
+     var user = this;
+    // var password = user.password;
+
+        if (user.isModified('password')){
+     	
+       bcrypt.genSalt((10), (err,salt) => {
+       bcrypt.hash(user.password, salt, (err,hash) => {
+        
+       user.password = hash;
+
+       next();
+
+  		  });
+	});
+
+        
+     	} else {
+     		next();
+     	}
+});
 
  var Users = mongoose.model('User', UserSchema);
 
